@@ -1,1 +1,4 @@
-<?php $password=""; ?>
+<?php
+$sqlusername="";
+$sqlpassword="";
+?>
