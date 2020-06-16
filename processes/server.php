@@ -6,7 +6,7 @@ $username="";
 $email="";
 $errors=array();
 
-$db=mysqli_connect('localhost','root',$password,'inviteapp');
+$db=mysqli_connect('localhost',$sqlusername,$sqlpassword,'inviteapp');
 
 if(isset($_POST['login_user'])){
 
