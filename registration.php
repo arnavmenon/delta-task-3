@@ -29,9 +29,9 @@
         </div>
 
         <div class="inputlabel">
-          <label for="email">Email ID:&nbsp&nbsp&nbsp&nbsp</label>
-          <input type="text" name="email">
-       </div>
+            <label for="email">Email ID&nbsp&nbsp:&nbsp&nbsp</label>
+            <input type="text" name="email">
+        </div>
 
        <div class="inputlabel">
          <label for="p_word1">Password:</label>

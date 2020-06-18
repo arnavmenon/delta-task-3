@@ -18,7 +18,7 @@ body{
   text-align: center;
   display:block;
   justify-content: center;
-  width: 400px;
+  width: 500px;
   font-family: 'Aclonica', sans-serif;
   box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(255, 255, 255, 0.19);
 

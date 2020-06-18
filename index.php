@@ -45,12 +45,12 @@ if(isset($_POST['logout'])){
 
 
 
-      <h3>
+      <h4 style="color:blue;">
         <?php
-        echo($_SESSION['success']);
+        echo ($_SESSION['success']);
         unset($_SESSION['success']);
         ?>
-      <h3>
+      <h4>
 
 
   <?php endif ?>

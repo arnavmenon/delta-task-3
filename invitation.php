@@ -69,10 +69,6 @@ if(isset($_POST['reject'])){
        font-family:'Aclonica', sans-serif;
      }
 
-     hr{
-       margin-left: 250px;
-       border: 2px solid black;
-     }
    </style>
 
 
@@ -99,7 +95,7 @@ if(isset($_POST['reject'])){
 
       </div>
 
-      <hr>
+      <hr class="invitationline">
 
       <div class="response">
 

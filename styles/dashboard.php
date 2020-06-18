@@ -28,6 +28,13 @@
   margin-left: 280px;
   font-size: 30px;
   font-family:'Aclonica', sans-serif;
+}
 
+.invitationline{
+  margin-left: 250px;
+  border: 2px solid black;
+}
 
+hr{
+  border: 2px solid black;
 }

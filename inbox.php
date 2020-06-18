@@ -43,8 +43,9 @@ if(!isset($_SESSION['username'])){
 
        $num=0;
        while($row=mysqli_fetch_array($result))
-       { $num++;
+       { if($row['from_user']!=$_SESSION['username'])
 
+        { $num++;
          $eventname=htmlspecialchars_decode($row['header']);
          $eventname=str_replace("<h1>","",$eventname);
          $eventname=str_replace("</h1>","",$eventname);
@@ -52,7 +53,7 @@ if(!isset($_SESSION['username'])){
          echo "<h3>".$num.".".$eventname."</h3>";
          echo "From: ".$row['from_user'] ;
          echo "<p><a href='".$link_address."?invite_id=$num'>View</a></p>";
-
+          }
        }
 
        if($num==0) echo "<h2>No new Invitations</h2>";

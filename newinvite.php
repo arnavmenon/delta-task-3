@@ -1,42 +1,93 @@
 <?php include('processes/server.php');
 
-
 if(!isset($_SESSION['username'])){
   $_SESSION['msg']="You must login to view this page";
   header("location: login.php");
 }
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+//Load composer's autoloader
+require 'vendor/autoload.php';
+$mail_array=array();$j=0;
+
+
 if(isset($_POST['sendinvite'])){
+
 
   $sumquery="SELECT * FROM invites ORDER BY id DESC";
   $sumresult=mysqli_query($db,$sumquery);
   $row=mysqli_fetch_array($sumresult);
   $newinviteid=$row['invite_id']+1;
 
-$from_user=$_SESSION['username'];
+  $from_user=$_SESSION['username'];
 
-$invitees=explode(",",mysqli_real_escape_string($db,$_POST['receipient']));
+  $invitees=explode(",",mysqli_real_escape_string($db,$_POST['receipient']));
 
-$header=mysqli_real_escape_string($db,$_POST['header']);
-$header=htmlspecialchars("<h1>".$header."</h1>");
+  $header0=mysqli_real_escape_string($db,$_POST['header']);
+  $header=htmlspecialchars("<h1>".$header0."</h1>");
 
-$body=mysqli_real_escape_string($db,$_POST['body']);
-$body=htmlspecialchars("<p>".$body."</p>");
+  $body0=mysqli_real_escape_string($db,$_POST['body']);
+  $body=htmlspecialchars("<p>".$body0."</p>");
 
-$footer=mysqli_real_escape_string($db,$_POST['footer']);
-$footer=htmlspecialchars("<footer>".$footer."</footer>");
+  $footer0=mysqli_real_escape_string($db,$_POST['footer']);
+  $footer=htmlspecialchars("<footer>".$footer0."</footer>");
 
 for($i=0;$i<count($invitees);$i++)
 {   $invite_query="INSERT INTO invites (from_user, to_user, invite_id, header, body, footer) VALUES ('$from_user', '$invitees[$i]', '$newinviteid', '$header', '$body', '$footer')";
     mysqli_query($db,$invite_query);
   }
 
-$_SESSION['success']="Invite sent";
-header("location: index.php");
 
+  $mail_query="SELECT username, email FROM userdata";
+  $mail_result=mysqli_query($db,$mail_query);
+
+
+  for($i=0;$i<mysqli_num_rows($mail_result);$i++)
+    { $mail_row=mysqli_fetch_array($mail_result);
+      for($j=0;$j<count($invitees);$j++)
+      {
+        if($invitees[$j]==$mail_row['username'])
+        {
+          array_push($mail_array,$mail_row['email']);
+        }
+      }
+    }
+
+    $a=htmlspecialchars_decode($header);
+    $b=htmlspecialchars_decode($body);
+    $c=htmlspecialchars_decode($footer);
+
+$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+try {
+    $mail->SMTPDebug = 0;                                 // Enable verbose debug output
+    $mail->isSMTP();                                      // Set mailer to use SMTP
+    $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+    $mail->Username = $_POST['mailun'];                 // SMTP username
+    $mail->Password = $_POST['mailpw'];                           // SMTP password
+    $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+    $mail->Port = 465;                                    // TCP port to connect to
+    //Recipients
+    $mail->setFrom($_POST['mailun']);
+
+    for($i=0;$i<count($mail_array);$i++)
+      $mail->addAddress($mail_array[$i]);     // Add a recipient
+    //Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = "Invitation for ".$header0;
+    $mail->Body    = "".$a.$b.$c."";
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+    $mail->send();
+
+    echo "<script>alert('Invite has been sent !');</script>";
+
+} catch (Exception $e) {
+  echo "<script>alert('Mail was not sent. Please try again later');</script>";
 }
 
-
+}
 ?>
 
 <!DOCTYPE html>
@@ -46,50 +97,9 @@ header("location: index.php");
     <meta charset="utf-8">
     <title>New Invitation</title>
     <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
+    <link href="styles/newinvitestyle.php" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap" rel="stylesheet">
-
-
-    <style>
-
-    input[type=text]{
-      width: 80%;
-      padding: 12px 20px;
-      margin: 8px 0;
-      display: inline-block;
-      border: 3px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    button[type=submit] {
-      width: 80%;
-      color: white;
-      background-color: black;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .inputfield{
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
-
-    .fieldname{
-      font-size: 25px;
-    }
-
-    #receipientlist{
-      display: none;
-    }
-
-
-  </style>
-
 
   </head>
 
@@ -126,6 +136,7 @@ header("location: index.php");
            </div>
          </div>
 
+
           <div class="inputfield" id="receipientlist">
             <div class="fieldname">
               <label for="receipient">Add receipients (usernames with comma(,) in between)</label>
@@ -134,17 +145,38 @@ header("location: index.php");
           </div>
 
 
-
-
           <div class="inputfield">
             <div class="fieldname"> <label for="body">Body</label> </div>
             <textarea name="body" rows="5" cols="138"></textarea>
           </div>
 
+
           <div class="inputfield">
             <div class="fieldname"> <label name="footer">Footer</label> </div>
             <input type="text" name="footer">
           </div>
+
+          <br>
+
+          <div class="inputfield">
+            <input type="checkbox" name="sendmail" value="sendmail" id="mailopt">
+            <label>Send Invitation via E-mail (Only GMail supported)</label>
+          </div>
+
+          <div class="inputfield" id="maildetails">
+
+            <div class="fieldname">
+              <label name="mailun">Gmail ID </label>
+              <input type="text" name="mailun" id="mailun">
+            </div>
+            <div class="inputfield">
+              <label name="mailpw">Password</label>
+              <input type="password" name="mailpw" id="mailpw" placeholder="This will not be saved">
+            </div>
+
+          </div>
+
+          <br>
 
           <button id="send" type="submit" name="sendinvite">Send</button>
 
@@ -156,27 +188,31 @@ header("location: index.php");
 
  <script type="text/javascript">
 
+ let mailopt=document.getElementById("mailopt");
+ let mailun=document.getElementById('mailun'),mailpw=document.getElementById('mailpw');
+
 
   document.getElementById("pvt").addEventListener("click",function(){
     document.getElementById('receipientlist').style.display="block";
   });
 
-  document.getElementById("pub").addEventListener("click",function(){
-    document.getElementById("invitees").value="";
-    document.getElementById('receipientlist').style.display="none";
+  document.getElementById("send").addEventListener("click",function(){
+    document.getElementById('receipientlist').style.display="block";
   });
 
-/*  document.getElementById("send").onclick=function(){
-    if(document.getElementById("pvt").checked)
-      if(document.getElementById("invitees").value=="")
-        alert("Please enter list of invitees!");
-  }
-*/
+  mailopt.addEventListener("click",function(){
+    if(mailopt.checked==true){
+      document.getElementById('maildetails').style.display="block";
+    }
+    else{
+      mailun.value=mailpw.value="";
+      document.getElementById('maildetails').style.display="none";
+    }
+  });
+
 
  </script>
 
   </body>
-
-
 
   </html>
