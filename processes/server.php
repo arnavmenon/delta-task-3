@@ -18,12 +18,14 @@ if(isset($_POST['login_user'])){
 
   if(count($errors)==0)
   {
-    $stmt =$db->prepare("SELECT* FROM userdata WHERE username=? AND p_word=? ");
-    $stmt->bind_param('ss',$username,$p_word1);
+    $stmt =$db->prepare("SELECT* FROM userdata WHERE username=?");
+    $stmt->bind_param('s',$username);
     $stmt->execute();
     $results = $stmt->get_result();
+    $row=$results->fetch_assoc();
 
-    if(mysqli_num_rows($results)){
+    if(password_verify($p_word1,$row['p_word']))
+    {
 
       $_SESSION['username']=  $username;
       $_SESSION['success']="Logged in successfully";
@@ -70,6 +72,7 @@ if(isset($_POST['reg_user'])){
 
   if(count($errors)==0)
   {
+    $p_word1=password_hash($p_word1 , PASSWORD_DEFAULT);
     mysqli_query($db,$register_query);
     $stmt =$db->prepare("INSERT INTO userdata (username, email, p_word) VALUES (?,?,?)");
     $stmt->bind_param('sss',$username,$email,$p_word1);
@@ -84,7 +87,8 @@ if(isset($_POST['reg_user'])){
 }
 
 function invite_reply($id,$reply){
-  $conn=new mysqli('localhost','root',$password,'inviteapp');
+  include ('password.php');
+  $conn=new mysqli('localhost',$sqlusername,$sqlpassword,'inviteapp');
   $stmt =$conn->prepare("UPDATE invites SET accept=? WHERE id=?");
   $stmt->bind_param('ii',$reply,$id);
   $stmt->execute();
