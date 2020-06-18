@@ -2,11 +2,12 @@
 ### NOTE:
 The integrated PHPMailer API currently only supports mails sent from a **GMail** account. Sender will have to enter their GMail login details if they wish to send invitation via e-mail (Login details will not be stored).
 In order to send invitation by mail:
-1.Login to the your Google account on the same browser.
-2.Send a dummy private invitation to yourself.
-3.Enable less secure app acees in this link:https://myaccount.google.com/lesssecureapps
-4.In case you get a Critical Security Alert mail, verify it.
-5.Now you can send invitations through Email! 
+
+1. Login to the your Google account on the same browser.
+2. Send a dummy private invitation to yourself.
+3. Enable less secure app acees in this link:https://myaccount.google.com/lesssecureapps
+4. In case you get a Critical Security Alert mail, verify it.
+5. Now you can send invitations through Email! 
 
 ## Setup guide for Windows(Using Apache server and MySQL)
 
