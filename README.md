@@ -1,4 +1,7 @@
 # delta-task-3-Invitation WebApp
+### NOTE:
+The integrated PHPMailer API currently only supports mails sent from a **GMail** account. Sender will have to enter their GMail login details if they wish to send invitation via e-mail (Login details will not be stored).
+
 ## Setup guide for Windows(Using Apache server and MySQL)
 
 1. Copy all files into **C:\Apache\htdocs** folder;
@@ -29,6 +32,12 @@ accept int(6)
 )
 
 ```
-5.Start the server and open **localhost** on your browser.
+5.In **php/php.ini** configuration file, enable the following extensions (remove preceding ;).
+```
+extension=mysqli
+extension=curl
+extension=openssl
+```
+6.Start the server and open **localhost** on your browser.
 
 
