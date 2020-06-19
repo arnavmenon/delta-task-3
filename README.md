@@ -5,7 +5,7 @@ In order to send invitation by mail:
 
 1. Login to the your Google account on the same browser.
 2. Send a dummy private invitation to yourself.
-3. Enable less secure app acees in this link:https://myaccount.google.com/lesssecureapps
+3. Enable less secure app access in this link:https://myaccount.google.com/lesssecureapps
 4. In case you get a Critical Security Alert mail, verify it.
 5. Now you can send invitations through Email! 
 
