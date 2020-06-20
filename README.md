@@ -28,14 +28,25 @@ p_word varchar(25)
 )
 
 CREATE TABLE invites(
-id int(6) PRIMARY KEY AUTO INCREMENT,
 invite_id int(6),
 from_user varchar(25),
-to_user varchar(25),
+event_date date,
+event_time time(0),
 header varchar(50),
 body varchar(300),
 footer varchar(100),
-accept int(6)
+deadline time
+)
+
+CREATE TABLE responses(
+id int(6),
+invite_id int(6),
+to_user varchar(25),
+seen int(6),
+accept int(6),
+plusones int(6),
+food_pref varchar(10),
+requests varchar(200)
 )
 
 ```
