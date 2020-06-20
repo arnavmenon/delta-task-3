@@ -18,8 +18,15 @@ if(!isset($_SESSION['username'])){
      <title>Inbox</title>
      <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
      <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
-     <link href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" rel="stylesheet">
 
+     <style>
+
+      #newicon{
+        width: 35px;
+      }
+
+      </style>
 
  </head>
 
@@ -38,25 +45,39 @@ if(!isset($_SESSION['username'])){
 
        <?php
 
-       $query="SELECT * FROM invites WHERE to_user='".$_SESSION['username']."' OR (to_user='' AND from_user!='".$_SESSION['username']."') ";
+       $invitelist=array();
+
+       $query="SELECT * FROM responses WHERE to_user='".$_SESSION['username']."'";
        $result=mysqli_query($db,$query);
-
-       $num=0;
-       while($row=mysqli_fetch_array($result))
-       { if($row['from_user']!=$_SESSION['username'])
-
-        { $num++;
-         $eventname=htmlspecialchars_decode($row['header']);
-         $eventname=str_replace("<h1>","",$eventname);
-         $eventname=str_replace("</h1>","",$eventname);
-
-         echo "<h3>".$num.".".$eventname."</h3>";
-         echo "From: ".$row['from_user'] ;
-         echo "<p><a href='".$link_address."?invite_id=$num'>View</a></p>";
-          }
+       while($row=mysqli_fetch_array($result)){
+         array_push($invitelist,$row['invite_id']);
        }
 
-       if($num==0) echo "<h2>No new Invitations</h2>";
+       $newquery="SELECT * FROM invites";
+       $newresult=mysqli_query($db,$newquery);
+       $num=1;
+       while($newrow=mysqli_fetch_array($newresult))
+       {
+         for($i=0;$i<count($invitelist);$i++)
+        {  if($invitelist[$i]==$newrow['invite_id'])
+        {
+         $eventname=htmlspecialchars_decode($newrow['header']);
+         $eventname=str_replace("<h1>","",$eventname);
+         $eventname=str_replace("</h1>","",$eventname);
+         $seen_query="SELECT * FROM responses WHERE invite_id='".$invitelist[$i]."' AND to_user='".$_SESSION['username']."'";
+         $seen_row=mysqli_fetch_array(mysqli_query($db,$seen_query));
+         if($seen_row['seen']=='0')
+            echo "<h3>".$num++.".".$eventname.'&nbsp<img src="images/newicon.png" id="newicon"></h3>';
+         else
+           echo "<h3>".$num++.".".$eventname.'</h3>';
+
+         //echo "<h3>".$num.".".$eventname.'</h3>';
+         echo "From: ".$newrow['from_user'] ;
+         echo "<p><a href='".$link_address."?invite_id=$invitelist[$i]'>View</a></p>";
+          }}
+       }
+
+       if($num==1) echo "<h2>No new Invitations</h2>";
 
 
 

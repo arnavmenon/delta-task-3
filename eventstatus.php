@@ -11,6 +11,18 @@ $query="SELECT * FROM invites WHERE invite_id='".$status_id."'";
 $result=mysqli_query($db,$query);
 $x=mysqli_query($db,$query);
 
+$num_query="SELECT SUM(plusones) FROM responses WHERE invite_id='".$status_id."'";
+$num_result=mysqli_query($db,$num_query);
+$num=mysqli_fetch_array($num_result);
+
+$check="SELECT * FROM invites WHERE invite_id='".$status_id."' AND from_user='".$_SESSION['username']."'";
+$access_check=mysqli_num_rows(mysqli_query($db,$check));
+if (!$access_check)
+  header("location: index.php");
+
+$namelist="SELECT * FROM responses WHERE invite_id='".$status_id."'";
+$publiclist=mysqli_query($db,$namelist);
+
  ?>
 
 
@@ -23,7 +35,7 @@ $x=mysqli_query($db,$query);
      <title>Outbox</title>
      <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
      <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
-     <link href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" rel="stylesheet">
 
 
  </head>
@@ -42,28 +54,35 @@ $x=mysqli_query($db,$query);
       <?php
         $a=mysqli_fetch_array($x);
         echo '<h1>'.htmlspecialchars_decode($a['header']).'</h1>';
+        echo '<p>Number of confirmed attendants- '.$num['SUM(plusones)'].'</p>';
        ?>
 
-       <h3>List of Invitees</h3>
+       <h3><u>List of Invitees</u></h3>
 
        <?php
 
        $num=0;
-       while($row=mysqli_fetch_array($result))
+       while($row=mysqli_fetch_array($publiclist))
+
           { $num++;
             echo "<p>".$num.".".$row['to_user']."-";
 
-            if($row['accept']==-1) : ?>
-              No reply yet</p>
-        <?php elseif($row['accept']==1) : ?>
+            if($row['accept']==-1)
+              echo 'No reply yet</p>';
 
-            <span style="color:green;">Attending</span></p>
+            elseif($row['accept']==1)
+            {echo '<span style="color:green;">Attending</span></p>';
+            echo '<p><strong>No. of people-</strong>'.$row['plusones'].'&nbsp&nbsp&nbsp<strong>Food Preference-</strong>'.$row['food_pref'].'</p>';
+            echo '<p><strong>Addl. Requests-</strong>'.$row['requests'].'</p><br>';
+            }
 
-        <?php  else : ?>
-            <span style="color:red;">NOT Attending</span></p>
+            else
+              echo '<span style="color:red;">NOT Attending</span></p>';
 
-        <?php endif ;
-      }; ?>
+            };
+
+
+      ?>
 
      </div>
 

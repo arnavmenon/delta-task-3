@@ -17,7 +17,7 @@ $link_address="eventstatus.php";
      <title>Outbox</title>
      <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
      <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
-     <link href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap" rel="stylesheet">
+     <link href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" rel="stylesheet">
 
 
  </head>

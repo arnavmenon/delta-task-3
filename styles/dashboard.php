@@ -27,7 +27,7 @@
 .main {
   margin-left: 280px;
   font-size: 30px;
-  font-family:'Aclonica', sans-serif;
+  font-family:'Philosopher', sans-serif;
 }
 
 .invitationline{

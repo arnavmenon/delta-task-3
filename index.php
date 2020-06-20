@@ -12,6 +12,10 @@ if(isset($_POST['logout'])){
   header("location: login.php");
 
 }
+
+$notif_query="SELECT * FROM responses WHERE seen='0' AND to_user='".$_SESSION['username']."'";
+$result=mysqli_query($db,$notif_query);
+$unseen=mysqli_num_rows($result);
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +26,7 @@ if(isset($_POST['logout'])){
     <title>Homepage</title>
     <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" rel="stylesheet">
 
 </head>
 
@@ -39,22 +43,15 @@ if(isset($_POST['logout'])){
    <div class="main">
      <h1>Homepage</h1>
 
-
     <?php
     if(isset($_SESSION['success'])) :  ?>
-
-
-
       <h4 style="color:blue;">
         <?php
         echo ($_SESSION['success']);
         unset($_SESSION['success']);
         ?>
       <h4>
-
-
-  <?php endif ?>
-
+      <?php endif ?>
 
 
   <?php if(isset($_SESSION['username'])) : ?>
@@ -64,11 +61,19 @@ if(isset($_POST['logout'])){
       <button type="submit" name="logout">Logout</button></form></p>
 
 
+    <h4><u>Notifications</u></h4>
+
+    <?php
+      if($unseen)
+        echo '<p>You have <a href="inbox.php">'.$unseen.' new invite(s)</a></p>';
+      else
+        echo '<p>No new invites</p';
+
+        ?>
+
    </div>
 
   <?php endif ?>
-
-
 
 
 </body>

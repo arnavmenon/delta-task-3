@@ -5,6 +5,7 @@ session_start();
 $username="";
 $email="";
 $errors=array();
+$invite_id;
 
 $db=mysqli_connect('localhost',$sqlusername,$sqlpassword,'inviteapp');
 
@@ -89,8 +90,8 @@ if(isset($_POST['reg_user'])){
 function invite_reply($id,$reply){
   include ('password.php');
   $conn=new mysqli('localhost',$sqlusername,$sqlpassword,'inviteapp');
-  $stmt =$conn->prepare("UPDATE invites SET accept=? WHERE id=?");
-  $stmt->bind_param('ii',$reply,$id);
+  $stmt =$conn->prepare("UPDATE responses SET accept=? WHERE invite_id=? AND to_user=?");
+  $stmt->bind_param('iis',$reply,$id,$_SESSION['username']);
   $stmt->execute();
   $conn->close();
 }

@@ -16,10 +16,11 @@ $mail_array=array();$j=0;
 if(isset($_POST['sendinvite'])){
 
 
-  $sumquery="SELECT * FROM invites ORDER BY id DESC";
+  $sumquery="SELECT * FROM invites";
   $sumresult=mysqli_query($db,$sumquery);
-  $row=mysqli_fetch_array($sumresult);
-  $newinviteid=$row['invite_id']+1;
+  $numrows=mysqli_num_rows($sumresult);
+  $newinviteid=$numrows+1;
+
 
   $from_user=$_SESSION['username'];
 
@@ -34,9 +35,16 @@ if(isset($_POST['sendinvite'])){
   $footer0=mysqli_real_escape_string($db,$_POST['footer']);
   $footer=htmlspecialchars("<footer>".$footer0."</footer>");
 
+  $date=$_POST['event_date'];$time=$_POST['event_time'];
+  $deadline=$_POST['deadline'];
+
+
 for($i=0;$i<count($invitees);$i++)
-{   $invite_query="INSERT INTO invites (from_user, to_user, invite_id, header, body, footer) VALUES ('$from_user', '$invitees[$i]', '$newinviteid', '$header', '$body', '$footer')";
+{   $invite_query="INSERT INTO invites (from_user, event_date, event_time, invite_id, header, body, footer, deadline) VALUES ('$from_user', '$date', '$time', '$newinviteid', '$header', '$body', '$footer', '$deadline')";
+    //$invite_query="INSERT INTO invites (from_user, to_user, invite_id, header, body, footer) VALUES ('$from_user', '$invitees[$i]', '$newinviteid', '$header', '$body', '$footer')";
+    $responses_entry="INSERT INTO responses (invite_id, to_user) VALUES ('$newinviteid', '$invitees[$i]')";
     mysqli_query($db,$invite_query);
+    mysqli_query($db,$responses_entry);
   }
 
 
@@ -58,6 +66,7 @@ for($i=0;$i<count($invitees);$i++)
     $a=htmlspecialchars_decode($header);
     $b=htmlspecialchars_decode($body);
     $c=htmlspecialchars_decode($footer);
+
 
 $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 try {
@@ -81,11 +90,12 @@ try {
     $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
     $mail->send();
 
-    echo "<script>alert('Invite has been sent !');</script>";
+    echo "<script>alert('Invite and mail have been sent !');</script>";
 
 } catch (Exception $e) {
-  echo "<script>alert('Mail was not sent. Please try again later');</script>";
+  echo "<script>alert('Invite sent, mail not sent. Sorry!');</script>";
 }
+
 
 }
 ?>
@@ -99,7 +109,7 @@ try {
     <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
     <link href="styles/newinvitestyle.php" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Aclonica&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" rel="stylesheet">
 
   </head>
 
@@ -125,6 +135,15 @@ try {
            <input type="text" name="header">
          </div>
 
+         <div class="inputfield">
+           <div class="fieldname"> <label name="event_date">Event Date</label> </div>
+           <input type="date" name="event_date">
+         </div>
+
+         <div class="inputfield">
+           <div class="fieldname"> <label name="event_time">Event Time</label> </div>
+           <input type="time" name="event_time">
+         </div>
 
           <div class="inputfield">
             <div class="fieldname">
@@ -156,11 +175,16 @@ try {
             <input type="text" name="footer">
           </div>
 
+          <div class="inputfield">
+            <div class="fieldname"> <label name="deadline">Deadline to Accept</label> </div>
+            <input type="date" name="deadline">
+          </div>
+
           <br>
 
           <div class="inputfield">
             <input type="checkbox" name="sendmail" value="sendmail" id="mailopt">
-            <label>Send Invitation via E-mail (Only GMail supported)</label>
+            <label name="sendmail">Send Invitation via E-mail (Only GMail supported)</label>
           </div>
 
           <div class="inputfield" id="maildetails">
@@ -190,7 +214,6 @@ try {
 
  let mailopt=document.getElementById("mailopt");
  let mailun=document.getElementById('mailun'),mailpw=document.getElementById('mailpw');
-
 
   document.getElementById("pvt").addEventListener("click",function(){
     document.getElementById('receipientlist').style.display="block";
