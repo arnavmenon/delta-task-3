@@ -17,7 +17,7 @@ In order to send invitation by mail:
 ```
 CREATE DATABASE inviteapp
 ```
-4. Select the database and create tables **userdata** and **invites**.
+4. Select the database and create tables **userdata**,**invites** and **responses**.
 ```
 USE inviteapp
 
