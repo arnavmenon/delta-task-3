@@ -1,4 +1,6 @@
 <?php include('processes/server.php');
+include('dashboard.html');
+
 $link_address="invitation.php";
 
 if(!isset($_SESSION['username'])){
@@ -15,8 +17,8 @@ if(!isset($_SESSION['username'])){
    <head>
 
      <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Inbox</title>
-     <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
      <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
      <link href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" rel="stylesheet">
 
@@ -31,14 +33,6 @@ if(!isset($_SESSION['username'])){
  </head>
 
    <body>
-
-     <div class="sidenav">
-       <a href="index.php">Home</a>
-       <a href="newinvite.php">Create new Event</a>
-       <a href="inbox.php">Received Invitations</a>
-       <a href="sent.php">Sent Invitations</a>
-     </div>
-
 
      <div class="main">
        <h1>Received Invitations</h1>

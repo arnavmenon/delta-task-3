@@ -1,4 +1,6 @@
 <?php include('processes/server.php');
+include('dashboard.html');
+
 
 if(!isset($_SESSION['username'])){
   $_SESSION['msg']="You must login to view this page";
@@ -105,8 +107,8 @@ try {
   <head>
 
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Invitation</title>
-    <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
     <link href="styles/newinvitestyle.php" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" rel="stylesheet">
@@ -115,14 +117,6 @@ try {
 
 
   <body>
-
-    <div class="sidenav">
-      <a href="index.php">Home</a>
-      <a href="newinvite.php">Create new Event</a>
-      <a href="inbox.php">Received Invitations</a>
-      <a href="sent.php">Sent Invitations</a>
-    </div>
-
 
     <div class="main">
 
@@ -166,7 +160,7 @@ try {
 
           <div class="inputfield">
             <div class="fieldname"> <label for="body">Body</label> </div>
-            <textarea name="body" rows="5" cols="138"></textarea>
+            <textarea name="body" class="bodytext" rows="5"></textarea>
           </div>
 
 

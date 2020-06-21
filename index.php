@@ -1,17 +1,12 @@
 <?php include('processes/server.php');
+      include('dashboard.html');
 
 if(!isset($_SESSION['username'])){
   $_SESSION['msg']="You must login to view this page";
   header("location: login.php");
 }
 
-if(isset($_POST['logout'])){
 
-  session_destroy();
-  unset($_SESSION['username']);
-  header("location: login.php");
-
-}
 
 $notif_query="SELECT * FROM responses WHERE seen='0' AND to_user='".$_SESSION['username']."'";
 $result=mysqli_query($db,$notif_query);
@@ -23,6 +18,7 @@ $unseen=mysqli_num_rows($result);
   <head>
 
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <link href="styles/dashboard.php" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
@@ -31,14 +27,6 @@ $unseen=mysqli_num_rows($result);
 </head>
 
   <body>
-
-    <div class="sidenav">
-      <a href="index.php">Home</a>
-      <a href="newinvite.php">Create new Event </a>
-      <a href="inbox.php">Received Invitations</a>
-      <a href="sent.php">Sent Invitations</a>
-    </div>
-
 
    <div class="main">
      <h1>Homepage</h1>
@@ -56,11 +44,8 @@ $unseen=mysqli_num_rows($result);
 
   <?php if(isset($_SESSION['username'])) : ?>
 
-    <p>Welcome <strong><?php echo $_SESSION['username']; ?></strong></p>
-    <p><form method="post">
-      <button type="submit" name="logout">Logout</button></form></p>
-
-
+    <p>Welcome <strong><?php echo $_SESSION['username'].'!'; ?></strong></p>
+    <br>
     <h4><u>Notifications</u></h4>
 
     <?php

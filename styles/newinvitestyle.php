@@ -12,6 +12,10 @@ input[type=text],input[type=password]{
   box-sizing: border-box;
 }
 
+.bodytext{
+  width: 80%;
+}
+
 button[type=submit] {
   width: 80%;
   color: white;

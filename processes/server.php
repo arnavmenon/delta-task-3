@@ -87,6 +87,15 @@ if(isset($_POST['reg_user'])){
 
 }
 
+if(isset($_POST['logout'])){
+
+  session_destroy();
+  unset($_SESSION['username']);
+  header("location: login.php");
+
+}
+
+
 function invite_reply($id,$reply){
   include ('password.php');
   $conn=new mysqli('localhost',$sqlusername,$sqlpassword,'inviteapp');
