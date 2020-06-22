@@ -22,7 +22,7 @@ $access_check=mysqli_num_rows(mysqli_query($db,$check));
 if (!$access_check)
   header("location: index.php");
 
-$namelist="SELECT * FROM responses WHERE invite_id='".$status_id."'";
+$namelist="SELECT * FROM responses WHERE invite_id='".$status_id."' AND to_user!=''";
 $publiclist=mysqli_query($db,$namelist);
 
  ?>

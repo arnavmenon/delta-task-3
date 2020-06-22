@@ -17,6 +17,7 @@ $mail_array=array();$j=0;
 
 if(isset($_POST['sendinvite'])){
 
+  $errors=array();
 
   $sumquery="SELECT * FROM invites";
   $sumresult=mysqli_query($db,$sumquery);
@@ -39,6 +40,16 @@ if(isset($_POST['sendinvite'])){
 
   $date=$_POST['event_date'];$time=$_POST['event_time'];
   $deadline=$_POST['deadline'];
+
+  if(empty($header0)) array_push($errors,"Header is required");
+  if(empty($body0)) array_push($errors,"Body is required");
+  if(empty($date)) array_push($errors,"Event Date is required");
+  if(empty($time)) array_push($errors,"Event Time is required");
+  if(empty($deadline)) array_push($errors,"Deadline to accept is required");
+
+
+  if(count($errors)==0){
+
 
 
 for($i=0;$i<count($invitees);$i++)
@@ -100,6 +111,7 @@ try {
 
 
 }
+}
 ?>
 
 <!DOCTYPE html>
@@ -123,6 +135,9 @@ try {
       <h1>New Invitation</h1>
 
     <form action="newinvite.php" method="post">
+
+      <?php include('processes/error.php') ?>
+
 
          <div class="inputfield">
            <div class="fieldname"> <label name="header">Header(Event Name)</label> </div>
@@ -154,7 +169,7 @@ try {
             <div class="fieldname">
               <label for="receipient">Add receipients (usernames with comma(,) in between)</label>
             </div>
-            <input type="text" name="receipient" id="invitees" placeholder="If blank,invite is sent to all users!">
+            <input type="text" name="receipient" id="invitees">
           </div>
 
 

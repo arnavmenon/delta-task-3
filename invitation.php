@@ -106,8 +106,14 @@ if(isset($_POST['reject'])){
   $accept_result=mysqli_query($db,$accept_query);
   $accept_row=mysqli_fetch_array($accept_result);
 
+  if (date("Y-m-d")>$deadline) : ?>
 
-  if($accept_row['accept']==-1) : ?>
+  <div style="display:block;justify-content: center;">
+      Deadline has expired. Sorry.
+  </div>
+
+
+<?php   elseif($accept_row['accept']==-1) : ?>
 
   <div style="display:block;justify-content: center;">
 
