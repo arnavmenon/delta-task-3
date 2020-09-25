@@ -1,4 +1,4 @@
-# delta-task-3-Invitation WebApp
+# Invitation WebApp
 ### NOTE:
 The integrated PHPMailer API currently only supports mails sent from a **GMail** account. Sender will have to enter their GMail login details if they wish to send invitation via e-mail (Login details will not be stored).
 In order to send invitation by mail:
